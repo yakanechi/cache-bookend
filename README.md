@@ -1,2 +1,2 @@
 # cache-bookend
-sd.cd bookend for uploading and restoring build cache
+Bookend for uploading and downloading build cache
