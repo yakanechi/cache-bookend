@@ -1,0 +1,43 @@
+{
+  "name": "screwdriver-cache-bookend",
+  "version": "1.0.0",
+  "description": "sd.cd bookend for restoring build cache",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "jenkins-mocha --recursive",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:screwdriver-cd/cache-bookend.git"
+  },
+  "homepage": "https://github.com/screwdriver-cd/cache-bookend",
+  "bugs": "https://github.com/screwdriver-cd/screwdriver/issues",
+  "keywords": [
+    "screwdriver",
+    "yahoo"
+  ],
+  "license": "BSD-3-Clause",
+  "author": "",
+  "contributors": [],
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.9.1",
+    "eslint-config-screwdriver": "^2.0.9",
+    "jenkins-mocha": "^3.0.0",
+    "mockery": "^2.1.0",
+    "sinon": "^7.0.0"
+  },
+  "dependencies": {
+    "screwdriver-build-bookend": "^2.1.1",
+    "request": "^2.88.0",
+    "hoek": "^5.0.4"
+  },
+  "release": {
+    "debug": false,
+    "verifyConditions": {
+      "path": "./node_modules/semantic-release/src/lib/plugin-noop.js"
+    }
+  }
+}
