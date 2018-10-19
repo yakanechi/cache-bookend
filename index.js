@@ -18,10 +18,10 @@ class CacheBookend extends BookendInterface {
 
         if (eventCache && eventCache.length > 0) {
             const eventMap = eventCache.map(item =>
-              `store-cli get ${item} --type=cache --scope=event`
+              `store-cli get ${item} --type=cache --scope=event || true`
           );
 
-            return Promise.resolve(eventMap.join(' && '));
+            return Promise.resolve(eventMap.join(' ; '));
         }
 
         return Promise.resolve('');
@@ -41,10 +41,10 @@ class CacheBookend extends BookendInterface {
 
         if (eventCache && eventCache.length > 0) {
             const eventMap = eventCache.map(item =>
-                      `store-cli set ${item} --type=cache --scope=event`
+                      `store-cli set ${item} --type=cache --scope=event || true`
                   );
 
-            return Promise.resolve(eventMap.join(' && '));
+            return Promise.resolve(eventMap.join(' ; '));
         }
 
         return Promise.resolve('');

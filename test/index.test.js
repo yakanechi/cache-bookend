@@ -27,8 +27,8 @@ describe('index test', () => {
                 }
             }] } }).then(result =>
             assert.strictEqual(result,
-            'store-cli get /foo/bar --type=cache --scope=event && ' +
-            'store-cli get /bar/baz --type=cache --scope=event')
+            'store-cli get /foo/bar --type=cache --scope=event || true ; ' +
+            'store-cli get /bar/baz --type=cache --scope=event || true')
         )
     );
 
@@ -40,8 +40,8 @@ describe('index test', () => {
                 }
             }] } }).then(result =>
             assert.strictEqual(result,
-            'store-cli set /foo/bar --type=cache --scope=event && ' +
-            'store-cli set /bar/baz --type=cache --scope=event')
+            'store-cli set /foo/bar --type=cache --scope=event || true ; ' +
+            'store-cli set /bar/baz --type=cache --scope=event || true')
         )
     );
 
