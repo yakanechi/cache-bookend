@@ -23,7 +23,7 @@
   "contributors": [],
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.9.1",
+    "eslint": "^3.19.0",
     "eslint-config-screwdriver": "^2.0.9",
     "jenkins-mocha": "^3.0.0",
     "mockery": "^2.1.0",

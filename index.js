@@ -1,85 +1,53 @@
 'use strict';
 
-const req = require('request');
 const hoek = require('hoek');
 const { BookendInterface } = require('screwdriver-build-bookend');
 
 class CacheBookend extends BookendInterface {
     /**
-     * Constructor for CacheBookend
-     * @method constructor
-     * @param  {apiUrl} URL of screwdriver API to get job information
-     * @return {cacheBookend}
-     */
-    constructor(apiUrl) {
-        super();
-
-        const jobId = process.env.SD_JOB_ID;
-        const token = process.env.SD_TOKEN;
-
-        this.options = {
-            url: `${apiUrl}/v4/jobs/${jobId}`,
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            json: true
-        };
-    }
-
-    /**
      * Gives the commands needed for restoring build cache before the build starts.
      * @method getSetupCommand
-     * @return {Promise}           Resolves to a string that represents the command to execute
+     * @param  {Object}         o           Information about the environment for setup
+     * @param  {PipelineModel}  o.pipeline  Pipeline model for the build
+     * @param  {JobModel}       o.job       Job model for the build
+     * @param  {Object}         o.build     Build configuration for the build (before creation)
+     * @return {Promise}        Resolves to a string that represents the command to execute
      */
-    getSetupCommand() {
-        return new Promise((resolve, reject) =>
-            req(this.options, (err, response) => {
-                if (!err && response.statusCode === 200) {
-                    const jobCache = hoek.reach(response.body, 'permutations.0.cache.event');
+    getSetupCommand(o) {
+        const eventCache = hoek.reach(o.job, 'permutations.0.cache.event');
 
-                    if (jobCache && jobCache.length > 0) {
-                        const eventMap = jobCache.map(item =>
-                            `store-cli get ${item} --type=cache --scope=event`
-                        );
+        if (eventCache && eventCache.length > 0) {
+            const eventMap = eventCache.map(item =>
+              `store-cli get ${item} --type=cache --scope=event`
+          );
 
-                        return resolve(eventMap.join(' && '));
-                    }
+            return Promise.resolve(eventMap.join(' && '));
+        }
 
-                    return resolve('');
-                }
-
-                return reject(err);
-            })
-        );
+        return Promise.resolve('');
     }
 
     /**
      * Gives the commands needed for publishing build cache after a build completes.
      * @method getTeardownCommand
-     * @return {Promise}           Resolves to a string that represents the commmand to execute
+     * @param  {Object}         o           Information about the environment for setup
+     * @param  {PipelineModel}  o.pipeline  Pipeline model for the build
+     * @param  {JobModel}       o.job       Job model for the build
+     * @param  {Object}         o.build     Build configuration for the build (before creation)
+     * @return {Promise}        Resolves to a string that represents the commmand to execute
      */
-    getTeardownCommand() {
-        return new Promise((resolve, reject) =>
-            req(this.options, (err, response) => {
-                if (!err && response.statusCode === 200) {
-                    const jobCache = hoek.reach(response.body, 'permutations.0.cache.event');
+    getTeardownCommand(o) {
+        const eventCache = hoek.reach(o.job, 'permutations.0.cache.event');
 
-                    if (jobCache && jobCache.length > 0) {
-                        const eventMap = jobCache.map(item =>
-                            `store-cli set ${item} --type=cache --scope=event`
-                        );
+        if (eventCache && eventCache.length > 0) {
+            const eventMap = eventCache.map(item =>
+                      `store-cli set ${item} --type=cache --scope=event`
+                  );
 
-                        return resolve(eventMap.join(' && '));
-                    }
+            return Promise.resolve(eventMap.join(' && '));
+        }
 
-                    return resolve('');
-                }
-
-                return reject(err);
-            })
-        );
+        return Promise.resolve('');
     }
 }
 
