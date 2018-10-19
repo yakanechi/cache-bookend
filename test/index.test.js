@@ -49,7 +49,7 @@ describe('index test', () => {
         bookend.getSetupCommand({
             job: { permutations: [{}] }
         }).then(result =>
-            assert.strictEqual(result, '')
+            assert.strictEqual(result, 'echo skipping cache')
         )
     );
 
@@ -57,7 +57,7 @@ describe('index test', () => {
         bookend.getTeardownCommand({
             job: { permutations: [{}] }
         }).then(result =>
-            assert.strictEqual(result, '')
+            assert.strictEqual(result, 'echo skipping cache')
         )
     );
 });

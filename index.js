@@ -24,7 +24,7 @@ class CacheBookend extends BookendInterface {
             return Promise.resolve(eventMap.join(' ; '));
         }
 
-        return Promise.resolve('');
+        return Promise.resolve('echo skipping cache');
     }
 
     /**
@@ -47,7 +47,7 @@ class CacheBookend extends BookendInterface {
             return Promise.resolve(eventMap.join(' ; '));
         }
 
-        return Promise.resolve('');
+        return Promise.resolve('echo skipping cache');
     }
 }
 
