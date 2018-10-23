@@ -3,6 +3,26 @@
 const hoek = require('hoek');
 const { BookendInterface } = require('screwdriver-build-bookend');
 
+/**
+ * Get cache commands that call the store-cli for approrpiate scope
+ * @method getCacheCommands
+ * @param  {Array}        cache   Array of cacheKeys
+ * @param  {String}       scope   Cache scope
+ * @param  {String}       action  Set or Get
+ * @return {String}       Commands to call store-cli
+ */
+function getCacheCommands(cache, scope, action) {
+    if (cache && cache.length > 0) {
+        const cmds = cache.map(item =>
+          `store-cli ${action} ${item} --type=cache --scope=${scope} || true`
+    );
+
+        return cmds.join(' ; ');
+    }
+
+    return `echo skipping ${scope} cache`;
+}
+
 class CacheBookend extends BookendInterface {
     /**
      * Gives the commands needed for restoring build cache before the build starts.
@@ -14,14 +34,14 @@ class CacheBookend extends BookendInterface {
      * @return {Promise}        Resolves to a string that represents the command to execute
      */
     getSetupCommand(o) {
-        const eventCache = hoek.reach(o.job, 'permutations.0.cache.event');
+        const cache = hoek.reach(o.job, 'permutations.0.cache');
 
-        if (eventCache && eventCache.length > 0) {
-            const eventMap = eventCache.map(item =>
-              `store-cli get ${item} --type=cache --scope=event || true`
-          );
+        if (cache) {
+            const eventCache = getCacheCommands(cache.event, 'event', 'get');
+            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'get');
+            const jobCache = getCacheCommands(cache.job, 'job', 'get');
 
-            return Promise.resolve(eventMap.join(' ; '));
+            return Promise.resolve(`${eventCache} ; ${pipelineCache} ; ${jobCache}`);
         }
 
         return Promise.resolve('echo skipping cache');
@@ -37,14 +57,14 @@ class CacheBookend extends BookendInterface {
      * @return {Promise}        Resolves to a string that represents the commmand to execute
      */
     getTeardownCommand(o) {
-        const eventCache = hoek.reach(o.job, 'permutations.0.cache.event');
+        const cache = hoek.reach(o.job, 'permutations.0.cache');
 
-        if (eventCache && eventCache.length > 0) {
-            const eventMap = eventCache.map(item =>
-                      `store-cli set ${item} --type=cache --scope=event || true`
-                  );
+        if (cache) {
+            const eventCache = getCacheCommands(cache.event, 'event', 'set');
+            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'set');
+            const jobCache = getCacheCommands(cache.job, 'job', 'set');
 
-            return Promise.resolve(eventMap.join(' ; '));
+            return Promise.resolve(`${eventCache} ; ${pipelineCache} ; ${jobCache}`);
         }
 
         return Promise.resolve('echo skipping cache');
