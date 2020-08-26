@@ -1,6 +1,6 @@
 'use strict';
 
-const hoek = require('hoek');
+const hoek = require('@hapi/hoek');
 const { BookendInterface } = require('screwdriver-build-bookend');
 
 /**
@@ -13,9 +13,7 @@ const { BookendInterface } = require('screwdriver-build-bookend');
  */
 function getCacheCommands(cache, scope, action) {
     if (cache && cache.length > 0) {
-        const cmds = cache.map(item =>
-            `store-cli ${action} ${item} --type=cache --scope=${scope} || true`
-        );
+        const cmds = cache.map(item => `store-cli ${action} ${item} --type=cache --scope=${scope} || true`);
 
         return cmds.join(' ; ');
     }

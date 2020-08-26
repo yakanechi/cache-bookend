@@ -20,84 +20,114 @@ describe('index test', () => {
     });
 
     it('getSetupCommand', () =>
-        bookend.getSetupCommand({
-            job: { permutations: [{
-                cache: {
-                    event: ['/foo/bar', '/bar/baz']
+        bookend
+            .getSetupCommand({
+                job: {
+                    permutations: [
+                        {
+                            cache: {
+                                event: ['/foo/bar', '/bar/baz']
+                            }
+                        }
+                    ]
                 }
-            }] } }).then(result =>
-            assert.strictEqual(result,
-                'echo skipping pipeline cache ; ' +
-                'store-cli get /foo/bar --type=cache --scope=event || true ; ' +
-                'store-cli get /bar/baz --type=cache --scope=event || true ; ' +
-                'echo skipping job cache')
-        )
-    );
+            })
+            .then(result =>
+                assert.strictEqual(
+                    result,
+                    'echo skipping pipeline cache ; ' +
+                        'store-cli get /foo/bar --type=cache --scope=event || true ; ' +
+                        'store-cli get /bar/baz --type=cache --scope=event || true ; ' +
+                        'echo skipping job cache'
+                )
+            ));
 
     it('getSetupCommand with pipeline, job, and event', () =>
-        bookend.getSetupCommand({
-            job: { permutations: [{
-                cache: {
-                    event: ['/foo/bar', '/bar/baz'],
-                    pipeline: ['/a/b/c'],
-                    job: ['/d/f', '/g']
+        bookend
+            .getSetupCommand({
+                job: {
+                    permutations: [
+                        {
+                            cache: {
+                                event: ['/foo/bar', '/bar/baz'],
+                                pipeline: ['/a/b/c'],
+                                job: ['/d/f', '/g']
+                            }
+                        }
+                    ]
                 }
-            }] } }).then(result =>
-            assert.strictEqual(result,
-                'store-cli get /a/b/c --type=cache --scope=pipeline || true ; ' +
-                'store-cli get /foo/bar --type=cache --scope=event || true ; ' +
-                'store-cli get /bar/baz --type=cache --scope=event || true ; ' +
-                'store-cli get /d/f --type=cache --scope=job || true ; ' +
-                'store-cli get /g --type=cache --scope=job || true')
-        )
-    );
+            })
+            .then(result =>
+                assert.strictEqual(
+                    result,
+                    'store-cli get /a/b/c --type=cache --scope=pipeline || true ; ' +
+                        'store-cli get /foo/bar --type=cache --scope=event || true ; ' +
+                        'store-cli get /bar/baz --type=cache --scope=event || true ; ' +
+                        'store-cli get /d/f --type=cache --scope=job || true ; ' +
+                        'store-cli get /g --type=cache --scope=job || true'
+                )
+            ));
 
     it('getTeardownCommand', () =>
-        bookend.getTeardownCommand({
-            job: { permutations: [{
-                cache: {
-                    event: ['/foo/bar', '/bar/baz']
+        bookend
+            .getTeardownCommand({
+                job: {
+                    permutations: [
+                        {
+                            cache: {
+                                event: ['/foo/bar', '/bar/baz']
+                            }
+                        }
+                    ]
                 }
-            }] } }).then(result =>
-            assert.strictEqual(result,
-                'echo skipping pipeline cache ; ' +
-                'store-cli set /foo/bar --type=cache --scope=event || true ; ' +
-                'store-cli set /bar/baz --type=cache --scope=event || true ; ' +
-                'echo skipping job cache')
-        )
-    );
+            })
+            .then(result =>
+                assert.strictEqual(
+                    result,
+                    'echo skipping pipeline cache ; ' +
+                        'store-cli set /foo/bar --type=cache --scope=event || true ; ' +
+                        'store-cli set /bar/baz --type=cache --scope=event || true ; ' +
+                        'echo skipping job cache'
+                )
+            ));
 
     it('getTeardownCommand with pipeline, job, and event', () =>
-        bookend.getTeardownCommand({
-            job: { permutations: [{
-                cache: {
-                    event: ['/foo/bar', '/bar/baz'],
-                    pipeline: ['/a/b/c'],
-                    job: ['/d/f', '/g']
+        bookend
+            .getTeardownCommand({
+                job: {
+                    permutations: [
+                        {
+                            cache: {
+                                event: ['/foo/bar', '/bar/baz'],
+                                pipeline: ['/a/b/c'],
+                                job: ['/d/f', '/g']
+                            }
+                        }
+                    ]
                 }
-            }] } }).then(result =>
-            assert.strictEqual(result,
-                'store-cli set /a/b/c --type=cache --scope=pipeline || true ; ' +
-                'store-cli set /foo/bar --type=cache --scope=event || true ; ' +
-                'store-cli set /bar/baz --type=cache --scope=event || true ; ' +
-                'store-cli set /d/f --type=cache --scope=job || true ; ' +
-                'store-cli set /g --type=cache --scope=job || true')
-        )
-    );
+            })
+            .then(result =>
+                assert.strictEqual(
+                    result,
+                    'store-cli set /a/b/c --type=cache --scope=pipeline || true ; ' +
+                        'store-cli set /foo/bar --type=cache --scope=event || true ; ' +
+                        'store-cli set /bar/baz --type=cache --scope=event || true ; ' +
+                        'store-cli set /d/f --type=cache --scope=job || true ; ' +
+                        'store-cli set /g --type=cache --scope=job || true'
+                )
+            ));
 
     it('getSetupCommand resolves to empty', () =>
-        bookend.getSetupCommand({
-            job: { permutations: [{}] }
-        }).then(result =>
-            assert.strictEqual(result, 'echo skipping cache')
-        )
-    );
+        bookend
+            .getSetupCommand({
+                job: { permutations: [{}] }
+            })
+            .then(result => assert.strictEqual(result, 'echo skipping cache')));
 
     it('getTeardownCommand resolves to empty', () =>
-        bookend.getTeardownCommand({
-            job: { permutations: [{}] }
-        }).then(result =>
-            assert.strictEqual(result, 'echo skipping cache')
-        )
-    );
+        bookend
+            .getTeardownCommand({
+                job: { permutations: [{}] }
+            })
+            .then(result => assert.strictEqual(result, 'echo skipping cache')));
 });
