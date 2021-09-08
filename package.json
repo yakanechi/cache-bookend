@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@hapi/hoek": "^9.0.4",
-    "request": "^2.88.0",
     "screwdriver-build-bookend": "^2.1.1"
   },
   "release": {
