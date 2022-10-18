@@ -6,11 +6,11 @@
   "scripts": {
     "pretest": "eslint .",
     "test": "nyc --report-dir ./artifacts/coverage --reporter=lcov mocha --reporter mocha-multi-reporters --reporter-options configFile=./mocha.config.json --recursive --timeout 4000 --retries 1 --exit --allow-uncaught true --color true",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "./node_modules/.bin/semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:screwdriver-cd/cache-bookend.git"
+    "url": "git+https://github.com/screwdriver-cd/cache-bookend.git"
   },
   "homepage": "https://github.com/screwdriver-cd/cache-bookend",
   "bugs": "https://github.com/screwdriver-cd/screwdriver/issues",
@@ -34,12 +34,12 @@
   },
   "dependencies": {
     "@hapi/hoek": "^9.0.4",
-    "screwdriver-build-bookend": "^2.1.1"
+    "screwdriver-build-bookend": "^3.0.0"
   },
   "release": {
-    "debug": false,
-    "verifyConditions": {
-      "path": "./node_modules/semantic-release/src/lib/plugin-noop.js"
-    }
+    "branches": [
+      "master"
+    ],
+    "debug": false
   }
 }
