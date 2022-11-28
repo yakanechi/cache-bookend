@@ -1,6 +1,6 @@
 {
   "name": "screwdriver-cache-bookend",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "sd.cd bookend for restoring build cache",
   "main": "index.js",
   "scripts": {
@@ -22,19 +22,19 @@
   "author": "",
   "contributors": [],
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^7.5.0",
-    "eslint-config-screwdriver": "^5.0.1",
-    "mocha": "^8.1.1",
+    "chai": "^4.3.7",
+    "eslint": "^8.28.0",
+    "eslint-config-screwdriver": "^7.0.0",
+    "mocha": "^10.1.0",
     "mocha-multi-reporters": "^1.5.1",
     "mocha-sonarqube-reporter": "^1.0.2",
-    "nyc": "^15.0.0",
+    "nyc": "^15.1.0",
     "mockery": "^2.1.0",
-    "sinon": "^7.0.0"
+    "sinon": "^14.0.2"
   },
   "dependencies": {
-    "@hapi/hoek": "^9.0.4",
-    "screwdriver-build-bookend": "^3.0.0"
+    "@hapi/hoek": "^10.0.1",
+    "screwdriver-build-bookend": "^4.0.0"
   },
   "release": {
     "branches": [
