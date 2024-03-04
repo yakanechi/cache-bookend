@@ -13,7 +13,7 @@ const { BookendInterface } = require('screwdriver-build-bookend');
  */
 function getCacheCommands(cache, scope, action) {
     if (cache && cache.length > 0) {
-        const cmds = cache.map(item => `store-cli ${action} ${item} --type=cache --scope=${scope} || true`);
+        const cmds = cache.map(item => `store-cli ${action} ${item} --type=cache --scope=${scope} || meta set build.warning.${action}${scope} "Failed to ${action} ${scope} cache" || true`);
 
         return cmds.join(' ; ');
     }
