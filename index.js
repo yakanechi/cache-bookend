@@ -11,8 +11,9 @@ const { BookendInterface } = require('screwdriver-build-bookend');
  * @param  {String}       action  Set or Get
  * @return {String}       Commands to call store-cli
  */
-function getCacheCommands(cache, scope, action) {
-    if (cache && cache.length > 0) {
+function getCacheCommands(cache, scope, action, enabled) {
+    const isEnabled = (enabled === "true")
+    if (isEnabled && cache && cache.length > 0) {
         const cmds = cache.map(item => `store-cli ${action} ${item} --type=cache --scope=${scope} || true`);
 
         return cmds.join(' ; ');
@@ -33,11 +34,12 @@ class CacheBookend extends BookendInterface {
      */
     getSetupCommand(o) {
         const cache = hoek.reach(o.job, 'permutations.0.cache');
+        const env = hoek.reach(o.job, 'permutations.0.environment')
 
         if (cache) {
-            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'get');
-            const eventCache = getCacheCommands(cache.event, 'event', 'get');
-            const jobCache = getCacheCommands(cache.job, 'job', 'get');
+            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'get', env.CACHE_PIPELINE_SETUP);
+            const eventCache = getCacheCommands(cache.event, 'event', 'get', env.CACHE_EVENT_SETUP);
+            const jobCache = getCacheCommands(cache.job, 'job', 'get', env.CACHE_JOB_SETUP);
 
             return Promise.resolve(`${pipelineCache} ; ${eventCache} ; ${jobCache}`);
         }
@@ -56,11 +58,12 @@ class CacheBookend extends BookendInterface {
      */
     getTeardownCommand(o) {
         const cache = hoek.reach(o.job, 'permutations.0.cache');
+        const env = hoek.reach(o.job, 'permutations.0.environment')
 
         if (cache) {
-            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'set');
-            const eventCache = getCacheCommands(cache.event, 'event', 'set');
-            const jobCache = getCacheCommands(cache.job, 'job', 'set');
+            const pipelineCache = getCacheCommands(cache.pipeline, 'pipeline', 'set', env.CACHE_PIPELINE_TEARDOWN);
+            const eventCache = getCacheCommands(cache.event, 'event', 'set', env.CACHE_EVENT_TEARDOWN);
+            const jobCache = getCacheCommands(cache.job, 'job', 'set', env.CACHE_JOB_TEARDOWN);
 
             return Promise.resolve(`${pipelineCache} ; ${eventCache} ; ${jobCache}`);
         }
